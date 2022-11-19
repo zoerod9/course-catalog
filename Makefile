@@ -1,4 +1,4 @@
 all:    #target name
-	gcc assign4.c -o main
+	gcc assign4.c -o main.o
 clean:
-	rm ./main
+	rm ./main.o

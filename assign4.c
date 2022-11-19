@@ -1,9 +1,5 @@
 #include <stdio.h>
-
-void create();
-void update();
-void read();
-void delete ();
+#include <string.h>
 
 typedef struct
 {
@@ -13,6 +9,13 @@ typedef struct
     unsigned course_Size;
     unsigned padding;
 } Course;
+
+void create();
+void update();
+void read();
+void delete ();
+int getCourseExists(int courseNumber);
+Course getCourse(int courseNumber);
 
 int main()
 {
@@ -71,6 +74,11 @@ void create()
     int courseNumber;
     sscanf(courseNumberStr, "%i", &courseNumber);
 
+    if (getCourseExists(courseNumber)){
+        printf("ERROR: course already exists\n");
+        return;
+    }
+
     Course course;
     printf("Enter a CS course name:\n");
     gets(course.course_Name);
@@ -107,19 +115,53 @@ void read()
     int courseNumber;
     sscanf(courseNumberStr, " %d", &courseNumber);
 
+    Course course = getCourse(courseNumber);
 
-    FILE *courses = fopen("./courses.dat", "rb");
-    Course course;
-    fseek(courses, courseNumber * sizeof(Course), 0);
-    int read = fread(&course, sizeof(Course), 1L, courses);
-    fclose(courses);
-
-    printf("Course number: %i\n", courseNumber);
-    printf("Course name: %s\n", course.course_Name);
-    printf("Scheduled days: %s\n", course.course_Sched);
-    printf("Credit hours: %i\n", course.course_Hours);
-    printf("Enrolled Students: %i\n", course.course_Size);
+    if (getCourseExists(courseNumber)){
+        printf("Course number: %i\n", courseNumber);
+        printf("Course name: %s\n", course.course_Name);
+        printf("Scheduled days: %s\n", course.course_Sched);
+        printf("Credit hours: %i\n", course.course_Hours);
+        printf("Enrolled Students: %i\n", course.course_Size);
+    } else {
+        printf("ERROR: course not found\n");
+    }
 
 }
 
-void delete () {}
+void delete () {
+    printf("Enter a course number:\n");
+    char courseNumberStr[4];
+    gets(courseNumberStr);
+    int courseNumber;
+    sscanf(courseNumberStr, "%i", &courseNumber);
+
+
+    if (getCourseExists(courseNumber)){
+        // delete course
+    } else {
+        printf("ERROR: course not found\n");
+    }
+}
+
+
+// Helpers
+
+Course getCourse(int courseNumber){
+    FILE *courses = fopen("./courses.dat", "rb");
+    fseek(courses, courseNumber * sizeof(Course), 0);
+    Course course;
+    int read = fread(&course, sizeof(Course), 1L, courses);
+    fclose(courses);
+
+    return course;
+}
+
+int getCourseExists(int courseNumber){    
+    Course course = getCourse(courseNumber);
+    if (strlen(course.course_Name) > 0){
+        return 1;
+    } else {
+        return 0;
+    }
+}

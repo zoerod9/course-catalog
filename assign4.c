@@ -1,6 +1,9 @@
 #include <stdio.h>
 
+void create();
+void update();
 void read();
+void delete ();
 
 typedef struct
 {
@@ -13,50 +16,55 @@ typedef struct
 
 int main()
 {
-    read();
-    // while (1)
-    // {
+    while (1)
+    {
 
-    //     printf("Enter one of the following actions or press CTRL-D to exit.\n");
-    //     printf("C - create a new course record\n");
-    //     printf("U - update an existing course record\n");
-    //     printf("R - read an existing course record\n");
-    //     printf("D - delete an existing course record\n");
+        printf("Enter one of the following actions or press CTRL-D to exit.\n");
+        printf("C - create a new course record\n");
+        printf("U - update an existing course record\n");
+        printf("R - read an existing course record\n");
+        printf("D - delete an existing course record\n");
 
-    //     char response[1];
-    //     gets(response);
-    //     char input = response[0];
+        char response[1];
+        gets(response);
+        char input = response[0];
 
-    //     switch (input)
-    //     {
+        switch (input)
+        {
 
-    //     case 'C':
-    //     case 'c':
-    //         printf("you hit c block\n");
-    //         break;
+        case 'C':
+        case 'c':
+            printf("TODO: Create\n");
+            create();
+            break;
 
-    //     case 'U':
-    //     case 'u':
-    //         printf("you hit u block\n");
-    //         break;
+        case 'U':
+        case 'u':
+            printf("TODO: update\n");
+            update();
+            break;
 
-    //     case 'R':
-    //     case 'r':
-    //         read();
-    //         break;
+        case 'R':
+        case 'r':
+            read();
+            break;
 
-    //     case 'D':
-    //     case 'd':
-    //         printf("you hit d block\n");
-    //         break;
+        case 'D':
+        case 'd':
+            printf("TODO: delete\n");
+            delete();
+            break;
 
-    //     default:
-    //         printf("ERROR: invalid option\n");
-    //     }
-    // }
+        default:
+            printf("ERROR: invalid option\n");
+        }
+    }
 
     return 0;
 }
+
+void create() {}
+void update() {}
 
 void read()
 {
@@ -78,3 +86,5 @@ void read()
 
     fclose(courses);
 }
+
+void delete () {}

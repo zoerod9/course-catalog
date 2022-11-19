@@ -25,16 +25,16 @@ int main()
         printf("R - read an existing course record\n");
         printf("D - delete an existing course record\n");
 
-        char response[1];
-        gets(response);
-        char input = response[0];
+        char inputStr[10];
+        gets(inputStr);
+        char input;
+        sscanf(inputStr, "%c", &input);
 
         switch (input)
         {
 
         case 'C':
         case 'c':
-            printf("TODO: Create\n");
             create();
             break;
 
@@ -52,7 +52,7 @@ int main()
         case 'D':
         case 'd':
             printf("TODO: delete\n");
-            delete();
+            delete ();
             break;
 
         default:
@@ -63,20 +63,56 @@ int main()
     return 0;
 }
 
-void create() {}
+void create()
+{
+    printf("Enter a CS course number:\n");
+    char courseNumberStr[4];
+    gets(courseNumberStr);
+    int courseNumber;
+    sscanf(courseNumberStr, "%i", &courseNumber);
+
+    Course course;
+    printf("Enter a CS course name:\n");
+    gets(course.course_Name);
+
+    printf("Enter a CS course schedule:\n");
+    gets(course.course_Sched);
+
+    printf("Enter a CS course credit hours:\n");
+    char courseHours[10];
+    gets(courseHours);
+    sscanf(courseHours, "%i", &course.course_Hours);
+
+    printf("Enter a CS course enrollment:\n");
+    char courseSize[10];
+    gets(courseSize);
+    sscanf(courseSize, "%i", &course.course_Size);
+
+    FILE *courses = fopen("./courses.dat", "wb");
+
+    fseek(courses, courseNumber * sizeof(Course), 0);
+
+    long recordsWritten = fwrite(&course, sizeof(Course), 1L, courses);
+
+    fclose(courses);
+}
+
 void update() {}
 
 void read()
 {
     printf("Enter a CS course number:\n");
+    char courseNumberStr[10];
+    gets(courseNumberStr);
     int courseNumber;
-    scanf("%i", &courseNumber);
+    sscanf(courseNumberStr, " %d", &courseNumber);
+
 
     FILE *courses = fopen("./courses.dat", "rb");
-
     Course course;
     fseek(courses, courseNumber * sizeof(Course), 0);
     int read = fread(&course, sizeof(Course), 1L, courses);
+    fclose(courses);
 
     printf("Course number: %i\n", courseNumber);
     printf("Course name: %s\n", course.course_Name);
@@ -84,7 +120,6 @@ void read()
     printf("Credit hours: %i\n", course.course_Hours);
     printf("Enrolled Students: %i\n", course.course_Size);
 
-    fclose(courses);
 }
 
 void delete () {}

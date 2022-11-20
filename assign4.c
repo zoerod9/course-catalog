@@ -19,53 +19,54 @@ Course getCourse(int courseNumber);
 void createCourse(int courseNumber, Course course);
 Course promptForCourse();
 int promptForCourseNumber();
+Course getEmptyCourse();
+
+void printCourse(Course course);
+void printCourseNumber(int courseNumber);
 
 int main()
 {
-    // while (1)
-    // {
+    while (1)
+    {
 
-    //     printf("Enter one of the following actions or press CTRL-D to exit.\n");
-    //     printf("C - create a new course record\n");
-    //     printf("U - update an existing course record\n");
-    //     printf("R - read an existing course record\n");
-    //     printf("D - delete an existing course record\n");
+        printf("Enter one of the following actions or press CTRL-D to exit.\n");
+        printf("C - create a new course record\n");
+        printf("U - update an existing course record\n");
+        printf("R - read an existing course record\n");
+        printf("D - delete an existing course record\n");
 
-    //     char inputStr[10];
-    //     gets(inputStr);
-    //     char input;
-    //     sscanf(inputStr, "%c", &input);
+        char inputStr[10];
+        gets(inputStr);
+        char input;
+        sscanf(inputStr, "%c", &input);
 
-    //     switch (input)
-    //     {
+        switch (input)
+        {
 
-    //     case 'C':
-    //     case 'c':
-    //         create();
-    //         break;
+        case 'C':
+        case 'c':
+            create();
+            break;
 
-    //     case 'U':
-    //     case 'u':
-    //         update();
-    //         break;
+        case 'U':
+        case 'u':
+            update();
+            break;
 
-    //     case 'R':
-    //     case 'r':
-    //         read();
-    //         break;
+        case 'R':
+        case 'r':
+            read();
+            break;
 
-    //     case 'D':
-    //     case 'd':
-    //         printf("TODO: delete\n");
-    //         delete ();
-    //         break;
+        case 'D':
+        case 'd':
+            delete();
+            break;
 
-    //     default:
-    //         printf("ERROR: invalid option\n");
-    //     }
-    // }
-
-    update();
+        default:
+            printf("ERROR: invalid option\n");
+        }
+    }
 
     return 0;
 }
@@ -103,24 +104,23 @@ void update()
             strcpy(oldCourse.course_Sched, updatedCourse.course_Sched);
         }
 
-        if (updatedCourse.course_Size != 0)
+        if (updatedCourse.course_Size != -1)
         {
             oldCourse.course_Size = updatedCourse.course_Size;
         }
 
-        if (updatedCourse.course_Hours != 0)
+        if (updatedCourse.course_Hours != -1)
         {
             oldCourse.course_Hours = updatedCourse.course_Hours;
         }
 
-        // if new course number is not empty,
-        if (newCourseNumber != 0)
+        if (newCourseNumber != -1)
         {
-            createCourse(newCourseNumber, updatedCourse);
+            createCourse(newCourseNumber, oldCourse);
         }
         else
         {
-            createCourse(courseNumber, updatedCourse);
+            createCourse(courseNumber, oldCourse);
         }
     }
     else
@@ -132,11 +132,9 @@ void update()
 void read()
 {
     int courseNumber = promptForCourseNumber();
-
-    Course course = getCourse(courseNumber);
-
     if (getCourseExists(courseNumber))
     {
+        Course course = getCourse(courseNumber);
         printf("Course number: %i\n", courseNumber);
         printf("Course name: %s\n", course.course_Name);
         printf("Scheduled days: %s\n", course.course_Sched);
@@ -155,7 +153,8 @@ void delete ()
 
     if (getCourseExists(courseNumber))
     {
-        // delete course
+        Course emptyCourse = getEmptyCourse();
+        createCourse(courseNumber, emptyCourse);
     }
     else
     {
@@ -210,14 +209,28 @@ Course promptForCourse()
     gets(course.course_Sched);
 
     printf("Enter a CS course credit hours:\n");
-    char courseHours[10];
-    gets(courseHours);
-    sscanf(courseHours, "%i", &course.course_Hours);
+    char courseHoursStr[10];
+    gets(courseHoursStr);
+    if (strlen(courseHoursStr) == 0)
+    {
+        course.course_Hours = -1;
+    }
+    else
+    {
+        sscanf(courseHoursStr, "%i", &course.course_Hours);
+    }
 
     printf("Enter a CS course enrollment:\n");
-    char courseSize[10];
-    gets(courseSize);
-    sscanf(courseSize, "%i", &course.course_Size);
+    char courseSizeStr[10];
+    gets(courseSizeStr);
+    if (strlen(courseSizeStr) == 0)
+    {
+        course.course_Size = -1;
+    }
+    else
+    {
+        sscanf(courseSizeStr, "%i", &course.course_Size);
+    }
 
     return course;
 }
@@ -227,7 +240,34 @@ int promptForCourseNumber()
     printf("Enter a course number:\n");
     char courseNumberStr[4];
     gets(courseNumberStr);
+    if (strlen(courseNumberStr) == 0)
+    {
+        return -1;
+    }
     int courseNumber;
     sscanf(courseNumberStr, "%i", &courseNumber);
     return courseNumber;
+}
+
+void printCourse(Course course)
+{
+    printf("Course name:   '%s'\n", course.course_Name);
+    printf("Course sched:  '%s'\n", course.course_Sched);
+    printf("Course hours:  '%i'\n", course.course_Hours);
+    printf("Course size:   '%i'\n", course.course_Size);
+}
+
+void printCourseNumber(int courseNumber)
+{
+    printf("Course number: '%i'\n", courseNumber);
+}
+
+Course getEmptyCourse()
+{
+    Course course;
+    strcpy(course.course_Name, "");
+    strcpy(course.course_Sched, "");
+    course.course_Hours = -1;
+    course.course_Size = -1;
+    return course;
 }
